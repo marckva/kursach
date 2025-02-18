@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Профиль клиента</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- Навигация -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">Мой магазин</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('products') }}">Товары</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('products') }}">Добавить товар</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('logout') }}">Выйти</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    {% block content %}
+    <div class="container mt-4">
+        <h2>Профиль клиента</h2>
+        <form method="POST">
+            <div class="mb-3">
+                <label class="form-label">Фамилия</label>
+                <input type="text" class="form-control" name="surname" value="{{ client.surname or '' }}" disabled>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Имя</label>
+                <input type="text" class="form-control" name="name" value="{{ client.name or '' }}" disabled>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Отчество</label>
+                <input type="text" class="form-control" name="patronymic" value="{{ client.patronymic or '' }}" disabled>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Адрес</label>
+                <input type="text" class="form-control" name="address" value="{{ client.address or '' }}" disabled>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Телефон</label>
+                <input type="text" class="form-control" name="phone" value="{{ client.phone or '' }}" disabled>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" name="email" value="{{ client.email or '' }}" disabled>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Логин</label>
+                <input type="text" class="form-control" value="{{ user.username }}" disabled>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Пароль</label>
+                <input type="password" class="form-control" name="password" placeholder="Новый пароль (необязательно)" disabled>
+            </div>
+
+            <button type="button" class="btn btn-primary" id="editBtn">Редактировать</button>
+            <button type="submit" class="btn btn-success d-none" id="saveBtn">Сохранить</button>
+        </form>
+    </div>
+
+    <script>
+    document.getElementById("editBtn").addEventListener("click", function() {
+        let inputs = document.querySelectorAll("input.form-control");
+        inputs.forEach(input => input.removeAttribute("disabled"));
+
+        document.getElementById("editBtn").classList.add("d-none");
+        document.getElementById("saveBtn").classList.remove("d-none");
+    });
+    </script>
+    {% endblock %}
+</body>
+</html>

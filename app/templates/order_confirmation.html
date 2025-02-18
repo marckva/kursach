@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Оформление заказа - Пилюльный мир{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Оформление заказа</h2>
+    <p>Пожалуйста, проверьте информацию о вашем заказе:</p>
+    <div class="order-items">
+        {% for item in basket_items %}
+            <div class="order-item">
+                <img src="{{ item.product.photo }}" alt="{{ item.product.productname }}">
+                <div class="item-details">
+                    <p><strong>{{ item.product.productname }}</strong></p>
+                    <p>Цена: {{ item.product.price }} ₽</p>
+                    <p>Количество: {{ item.quantity }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+    <div class="total-price">
+        <p><strong>Итого:</strong> {{ total_price }} ₽</p>
+    </div>
+    <form action="{{ url_for('place_order') }}" method="POST">
+        <button type="submit" class="btn btn-primary">Подтвердить заказ</button>
+    </form>
+</div>
+{% endblock %}

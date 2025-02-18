@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% block title %}Корзина - Пилюльный мир{% endblock %}
+{% block content %}
+<style>
+    body {
+        background: linear-gradient(135deg, #1e1e2f, #3a3a52);
+        color: #fff;
+        font-family: 'Arial', sans-serif;
+    }
+    .basket-container {
+        max-width: 800px;
+        margin: 50px auto;
+        padding: 30px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+    .basket-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding: 10px;
+        background: rgba(255, 255, 255, 0.2);
+        border-radius: 10px;
+    }
+    .basket-item img {
+        width: 100px;
+        height: auto;
+        border-radius: 10px;
+        object-fit: cover;
+    }
+    .basket-item .item-details {
+        margin-left: 20px;
+    }
+    .basket-item .item-details p {
+        margin: 0;
+        margin-bottom: 5px;
+    }
+    .basket-item .item-actions {
+        display: flex;
+        gap: 10px;
+    }
+    .btn-custom {
+        background: #ff4081;
+        border: none;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 25px;
+        transition: background 0.3s;
+    }
+    .btn-custom:hover {
+        background: #e73370;
+    }
+</style>
+<div class="basket-container">
+    <h2>Корзина</h2>
+    {% if basket_items %}
+        <div class="basket-items">
+            {% for item in basket_items %}
+                <div class="basket-item">
+                    <img src="{{ item.product.photo }}" alt="{{ item.product.productname }}">
+                    <div class="item-details">
+                        <p><strong>{{ item.product.productname }}</strong></p>
+                        <p>Цена: {{ item.product.price }} ₽</p>
+                        <p>Количество: {{ item.quantity }}</p>
+                    </div>
+                    <div class="item-actions">
+                        <form action="{{ url_for('update_basket', product_id=item.product.productid) }}" method="POST" style="display:inline;">
+                            <input type="number" name="quantity" value="{{ item.quantity }}" min="1" style="width: 50px; text-align: center;">
+                            <button type="submit" class="btn-custom">Обновить</button>
+                        </form>
+                        <form action="{{ url_for('remove_from_basket', product_id=item.product.productid) }}" method="POST" style="display:inline;">
+                            <button type="submit" class="btn-custom">Удалить</button>
+                        </form>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <div class="total-price">
+            <p><strong>Итого:</strong> {{ total_price }} ₽</p>
+        </div>
+        <form action="{{ url_for('place_order') }}" method="POST">
+            <button type="submit" class="btn btn-custom">Оформить заказ</button>
+        </form>
+    {% else %}
+        <p>Ваша корзина пуста.</p>
+    {% endif %}
+</div>
+{% endblock %}

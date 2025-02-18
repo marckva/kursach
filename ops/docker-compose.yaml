@@ -1,0 +1,72 @@
+version: "3.9"
+services:
+  postgres:
+    container_name: postgres
+    image: postgres:17.2-alpine3.20
+    environment:
+      POSTGRES_DB: pharmacy
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: P64wiz2imbwC5Jbi7XFohhA
+      PGDATA: /var/lib/postgresql/data/pgdata
+    volumes:
+      - ./dumps/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - pharmacy-volume-storage:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U admin -d pharmacy"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 4G
+    networks:
+      - postgres
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4:7.2
+    environment:
+      PGADMIN_DEFAULT_EMAIL: MRomanov@gmail.com
+      PGADMIN_DEFAULT_PASSWORD: g9Se3672bcVk52BynMPEt76
+      PGADMIN_MASTER_PASSWORD: v9qX2zadTvlIo4Q9mLRvSFt
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+    ports:
+      - "5050:80"
+    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 1G
+    networks:
+      - postgres
+
+  # backend:
+  #   container_name: backend
+  #   image: docker.io/goxlessr/damned_museum_back
+  #   ports:
+  #     - "5000:5000"
+  #   restart: unless-stopped
+  #   depends_on:
+  #     - postgres 
+  #   environment:
+  #     DB_SERVER: postgres
+  #     DB_PORT: 5432
+  #     DB_NAME: Museum
+  #   networks:
+  #     - postgres
+
+volumes:
+  pharmacy-volume-storage:
+  pgadmin-data:
+
+networks:
+  postgres:
+    driver: bridge

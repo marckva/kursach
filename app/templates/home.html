@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block title %}Главная{% endblock %}
+
+{% block content %}
+    <style>
+        .welcome-container {
+            text-align: center;
+            margin-top: 50px;
+            color: #fff;
+        }
+        .btn-custom {
+            padding: 10px 20px;
+            border-radius: 25px;
+            font-size: 1.1rem;
+        }
+        .btn-primary {
+            background: #ff4081;
+            border: none;
+            transition: background 0.3s;
+        }
+        .btn-primary:hover {
+            background: #e73370;
+        }
+        .btn-secondary {
+            background: #4a90e2;
+            border: none;
+            transition: background 0.3s;
+        }
+        .btn-secondary:hover {
+            background: #357ab8;
+        }
+    </style>
+
+    <div class="welcome-container">
+        <h1>Добро пожаловать{% if current_user %}, {{ current_user.username }}{% endif %}!</h1>
+        {% if current_user.is_authenticated %}
+            <p><a href="/logout" class="btn btn-primary btn-custom">Выйти</a></p>
+        {% else %}
+            <p>
+                <a href="/login" class="btn btn-primary btn-custom">Войти</a>
+                <a href="/register" class="btn btn-secondary btn-custom">Регистрация</a>
+            </p>
+        {% endif %}
+    </div>
+{% endblock %}

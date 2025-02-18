@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Профиль - Пилюльный мир{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h2>rename</h2>
+        <div class="mb-3">
+            <label for="" class="form-label">статус</label>
+            <input type="email" class="form-control" id="email" name="email" value="{{ current_user.email }}">
+        </div>
+        <button type="submit" class="btn btn-primary">Сохранить изменения</button>
+    </form>
+</div>
+{% endblock %}

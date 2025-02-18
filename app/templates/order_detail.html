@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Детали заказа - Пилюльный мир{% endblock %}
+{% block content %}
+<div class="container mt-4">
+    <h2>Детали заказа №{{ order.orderid }}</h2>
+    <p><strong>Статус:</strong> {{ order.status }}</p>
+    <p><strong>Стоимость:</strong> {{ order.cost }} ₽</p>
+    <p><strong>Адрес:</strong> {{ order.address }}</p>
+    <p><strong>Телефон:</strong> {{ order.phone }}</p>
+    <p><strong>Email:</strong> {{ order.email }}</p>
+    <h3>Товары в заказе:</h3>
+    <div class="order-items">
+        {% for item in order_items %}
+            <div class="order-item">
+                <p><strong>{{ item.productname }}</strong></p>
+                <p>Количество: {{ item.quantity }}</p>
+                <p>Цена: {{ item.price }} ₽</p>
+            </div>
+        {% endfor %}
+    </div>
+    <a href="{{ url_for('orders') }}" class="btn btn-secondary">Назад к списку заказов</a>
+</div>
+{% endblock %}

@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Детали товара - Пилюльный мир</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #1e1e2f, #3a3a52);
+            color: #fff;
+            font-family: 'Arial', sans-serif;
+        }
+        .product-detail-container {
+            max-width: 600px;
+            margin: 100px auto;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            text-align: center;
+        }
+        .product-detail-container h2 {
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+        .product-image {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            object-fit: cover;
+            margin-bottom: 20px;
+        }
+        .product-description p {
+            margin-bottom: 10px;
+        }
+        .btn-custom {
+            background: #ff4081;
+            border: none;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 25px;
+            transition: background 0.3s;
+            margin-top: 20px;
+        }
+        .btn-custom:hover {
+            background: #e73370;
+        }
+    </style>
+
+
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="{{ url_for('home') }}">Пилюльный мир</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('products') }}">Товары</a>
+                    </li>
+                    {% if current_user.is_authenticated %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('basket') }}">Корзина</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('logout') }}">Выйти</a>
+                    </li>
+                    {% else %}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('login') }}">Войти</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ url_for('register') }}">Зарегистрироваться</a>
+                    </li>
+                    {% endif %}
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="product-detail-container">
+        <h2>{{ product.productname }}</h2>
+        <img src="{{ product.photo }}" class="product-image" alt="{{ product.productname }}">
+        <div class="product-description">
+            <p><strong>Описание:</strong> {{ product.description }}</p>
+            <p><strong>Цена:</strong> {{ product.price }} ₽</p>
+            <p><strong>В наличии:</strong> {{ product.quantity }}</p>
+            <a href="{{ url_for('products') }}" class="btn btn-custom">Назад к списку товаров</a>
+            {% if current_user.is_authenticated %}
+                {% if current_user.username != "admin" %}
+
+            <form action="{{ url_for('add_to_basket', product_id=product.productid) }}" method="POST" style="display:inline;">
+                <button type="submit" class="btn btn-custom">Добавить в корзину</button>
+            </form>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

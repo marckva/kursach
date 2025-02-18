@@ -1,0 +1,59 @@
+{% extends "base.html" %}
+{% block title %}Список товаров{% endblock %}
+{% block content %}
+<style>
+    body {
+        background: linear-gradient(135deg, #1e1e2f, #3a3a52);
+        color: #fff;
+        font-family: 'Arial', sans-serif;
+    }
+    .product-list {
+        max-width: 1200px;
+        margin: 50px auto;
+        padding: 30px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 15px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+    .card {
+        background: rgba(255, 255, 255, 0.2);
+        border: none;
+        color: #fff;
+    }
+    .btn-custom {
+        background: #ff4081;
+        border: none;
+        color: white;
+        padding: 10px;
+        border-radius: 25px;
+        transition: background 0.3s;
+    }
+    .btn-custom:hover {
+        background: #e73370;
+    }
+</style>
+<div class="product-list">
+    <h2>Список товаров</h2>
+    <div class="row">
+        {% for product in products %}
+        <div class="col-md-3 mb-4">
+            <div class="card h-100 shadow-sm">
+                <img src="{{ product.photo }}" class="card-img-top" alt="{{ product.productname }}">
+                <div class="card-body">
+                    <h5 class="card-title">{{ product.productname }}</h5>
+                    <p class="card-text"><strong>Цена:</strong> {{ product.price }} ₽</p>
+                    <a href="{{ url_for('product_detail', product_id=product.productid) }}" class="btn btn-custom">Подробнее</a>
+                    {% if current_user.is_authenticated %}
+                        {% if current_user.username != "admin" %}
+                    <form action="{{ url_for('add_to_basket', product_id=product.productid) }}" method="POST" style="display:inline;">
+                        <button type="submit" class="btn btn-custom">Добавить в корзину</button>
+                    </form>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
