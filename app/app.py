@@ -7,7 +7,7 @@ import os
 
 app = Flask(__name__)
 app.secret_key = 'Yh6Q55iliM21yDzsNrNT3XDBYtU638BixBi8'
-app.config['UPLOAD_FOLDER'] = 'static/uploads'
+app.config['UPLOAD_FOLDER'] = os.path.join("static", "uploads")
 DB_CONFIG='postgresql://postgres:ROlqh90oojMcYjsn@unwisely-utmost-cat.data-1.use1.tembo.io:5432/postgres'
 
 def get_db_connection():
@@ -48,6 +48,8 @@ def basket():
             )
             basket_items = cur.fetchall()
             total_price = sum(item[2] * item[4] for item in basket_items)
+            for item in basket_items:
+                print(item[5])
             basket_items = [
                 dict(
                     basketid=row[0],
@@ -55,11 +57,13 @@ def basket():
                         productid=row[1],
                         productname=row[3],
                         price=row[4],
-                        photo=url_for('static', filename='uploads/' + row[5])
+                        photo=row[5]
                     ),
                     quantity=row[2]
                 ) for row in basket_items
             ]
+    print(basket_items)
+
     return render_template('basket.html', basket_items=basket_items, total_price=total_price)
 
 @app.route('/register', methods=['GET', 'POST'])
@@ -234,7 +238,7 @@ def products():
                 description=row[2],
                 quantity=row[3],
                 price=row[4],
-                photo=url_for('static', filename='uploads/' + row[5])
+                photo=row[5]
             ) for row in cur.fetchall()]
     return render_template('products.html', products=products)
 
@@ -270,9 +274,12 @@ def add_product():
         with get_db_connection() as conn:
             with conn.cursor() as cur:
                 cur.execute("INSERT INTO product (productname, description, quantity, price, photo) VALUES (%s, %s, %s, %s, %s)",
-                            (productname, description, quantity, price, filename))
+                            (productname, description, quantity, price, photo_path))
                 conn.commit()
                 flash('Товар успешно добавлен!', 'success')
+                print(filename)
+                print(photo_path)
+                print(photo)
                 return redirect(url_for('products'))
     
     return render_template('add_product.html')
@@ -286,15 +293,17 @@ def product_detail(product_id):
             if not product:
                 flash('Товар не найден!', 'danger')
                 return redirect(url_for('products'))
-            product = dict(
+            product_data = dict(
                 productid=product[0],
                 productname=product[1],
                 description=product[2],
                 quantity=product[3],
                 price=product[4],
-                photo=url_for('static', filename='uploads/' + product[5])
+                photo=product[5].replace("static/", "").replace("\\", "/")
             )
-    return render_template('product_detail.html', product=product)
+    #print(product)
+    #print(product['photo'])
+    return render_template('product_detail.html', product=product_data)
 
 
 @app.route('/add_to_basket/<int:product_id>', methods=['POST'])

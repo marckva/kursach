@@ -84,7 +84,7 @@
     </nav>
     <div class="product-detail-container">
         <h2>{{ product.productname }}</h2>
-        <img src="{{ product.photo }}" class="product-image" alt="{{ product.productname }}">
+        <img src="{{ url_for('static', filename=product.photo) }}" class="card-img-top" alt="{{ product.productname }}">
         <div class="product-description">
             <p><strong>Описание:</strong> {{ product.description }}</p>
             <p><strong>Цена:</strong> {{ product.price }} ₽</p>
