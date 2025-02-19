@@ -300,7 +300,7 @@ def product_detail(product_id):
                 description=product[2],
                 quantity=product[3],
                 price=product[4],
-                photo=product[5].replace("static/", "").replace("\\", "/")
+                photo=product[5].replace("static/", "").replace("\\", "/").replace("static/", "")
             )
     #print(product)
     print(product_data['photo'])
