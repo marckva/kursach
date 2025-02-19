@@ -7,8 +7,14 @@ import os
 
 app = Flask(__name__)
 app.secret_key = 'Yh6Q55iliM21yDzsNrNT3XDBYtU638BixBi8'
-app.config['UPLOAD_FOLDER'] = os.path.join("static", "uploads")
+#app.config['UPLOAD_FOLDER'] = os.path.join("static", "uploads")
 DB_CONFIG='postgresql://postgres:ROlqh90oojMcYjsn@unwisely-utmost-cat.data-1.use1.tembo.io:5432/postgres'
+
+UPLOAD_FOLDER = os.path.join("static", "uploads")
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 def get_db_connection():
     return psycopg.connect(DB_CONFIG)
